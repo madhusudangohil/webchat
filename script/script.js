@@ -46,7 +46,7 @@ var chat = {
 
             $.tzPOST('login',$(this).serialize(),function(r){
                 working = false;
-
+                console.log('after login');
                 if(r.error){
                     chat.displayError(r.error);
                 }
@@ -92,6 +92,7 @@ var chat = {
                 $('div.chat-'+tempID).remove();
 
                 params['id'] = r.insertID;
+                console.log('submit chat')
                 chat.addChatLine($.extend({},params));
             });
 
@@ -137,12 +138,12 @@ var chat = {
      // The login method hides displays the
     // user's login data and shows the submit form
 
-    login : function(name,gravatar){
-
+    login : function(name,gravatar){        
         chat.data.name = name;
         chat.data.gravatar = gravatar;
+        console.log(chat.data);
         $('#chatTopBar').html(chat.render('loginTopBar',chat.data));
-
+        $('#chatAuthor').val(name);
         $('#loginForm').fadeOut(function(){
             $('#submitForm').fadeIn();
             $('#chatText').focus();
@@ -165,6 +166,7 @@ var chat = {
             break;
 
             case 'chatLine':
+                console.log('in chat line - ' + params.text);
                 arr = [
                     '<div class="chat chat-',params.id,' rounded"><span class="gravatar">'+
                     '<img src="',params.gravatar,'" width="23" height="23" '+
@@ -194,7 +196,7 @@ var chat = {
     addChatLine : function(params){
 
         // All times are displayed in the user's timezone
-
+        console.log('add chat line '+ params);
         var d = new Date();
         if(params.time) {
 
@@ -244,7 +246,7 @@ var chat = {
 
     getChats : function(callback){
         $.tzGET('chats',{lastID: chat.data.lastID},function(r){
-
+            console.log(r);
             for(var i=0;i<r.chats.length;i++){
                 chat.addChatLine(r.chats[i]);
             }
